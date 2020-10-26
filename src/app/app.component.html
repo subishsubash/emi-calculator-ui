@@ -1,0 +1,189 @@
+<div class="row justify-content-md-center">
+  <div class="col-md-10">
+    <!-- Menu Tabs -->
+    <mat-tab-group mat-align-tabs="center" (selectedTabChange)="onClickGetCalcDetail($event)">
+      <div *ngFor="let loanType of loanTypeList">
+        <mat-tab label={{loanType.loanName}}>
+          <div class="container container-size">
+            <div class="col justify-content-md-center ">
+              <p class="secondary-text">{{loanType.loanDesc}}</p>
+            </div>
+          </div>
+        </mat-tab>
+      </div>
+    </mat-tab-group>
+
+    <div class="row justify-content-md-center text-color">
+      <h5 class="heading-text">{{currentLoanType}} Loan EMI Calculator</h5>
+    </div>
+    <div class="row justify-content-md-center title-gap">
+      <div class="col-md-5">
+        <!-- Loan Amount card -->
+        <mat-card class="example-result-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-8">
+                <h6 class="head-sec-text">LOAN AMOUNT</h6>
+              </div>
+              <div class="col-md-2">
+                <section class="example-section">
+                  <mat-form-field class="value-text-loan-amount">
+                    <mat-label class="head-lable-text">Amount</mat-label>
+                    <input matInput class="head-lable-text"[max]="loanAmount_max" [min]="loanAmount_min" type="number" [(ngModel)]="loanAmount" (keypress)="onUpdateValues()">
+                  </mat-form-field>
+                </section>
+              </div>
+            </div>
+            <mat-slider (change)="onUpdateValues()" class="example-margin" [max]="loanAmount_max" [min]="loanAmount_min"
+              [(ngModel)]="loanAmount" [thumbLabel]="false">
+            </mat-slider>
+            <div class="row">
+              <mat-label class="min-label-loan head-lable-text"> {{currencySymbol}} {{minLoanAmount}}</mat-label>
+              <mat-label class="max-label-loan head-lable-text"> {{currencySymbol}} {{maxLoanAmount}}</mat-label>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- tenure in months-->
+        <mat-card class="example-result-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-8">
+                <h6 class="head-sec-text">TENURE (MONTHS)</h6>
+              </div>
+              <div class="col-md-2">
+                <section class="example-section">
+                  <mat-form-field class="example-margin value-text-term">
+                    <mat-label class="head-lable-text">Months</mat-label>
+                    <input matInput class="head-lable-text" [min]="tenure_min" [max]="tenure_max" type="number" [(ngModel)]="tenureInMonth" (input)="onUpdateValues()">
+                  </mat-form-field>
+                </section>
+              </div>
+            </div>
+            <mat-slider class="example-margin" [max]="tenure_max" [min]="tenure_min" [(ngModel)]="tenureInMonth"
+              [thumbLabel]="true" (change)="onUpdateValues()">
+            </mat-slider>
+            <div class="row">
+              <mat-label class="min-label-terms head-lable-text"> {{mintenure}}</mat-label>
+              <mat-label class="max-label-terms head-lable-text"> {{maxtenure}}</mat-label>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <!-- Interest rate -->
+        <mat-card class="example-result-card">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-8">
+                <h6 class="head-sec-text">INTEREST RATE (% P.A.)</h6>
+              </div>
+              <!-- <div class="float-right">
+                <h6>%</h6>
+              </div> -->
+              <div class="col-md-2">
+                <section class="example-section">
+                  <mat-form-field class="example-margin value-text-interest">
+                    <mat-label class="head-lable-text">Rate</mat-label>
+                    <input matInput class="head-lable-text" type="number" [max]="interest_max" [min]="interest_min" step="0.01" [(ngModel)]="interestRate" (input)="onUpdateValues()" >
+                  </mat-form-field>
+                </section>
+              </div>
+            </div>
+            <mat-slider class="example-margins mat-slider-color" [step]="0.01" [max]="interest_max" [min]="interest_min"
+              [(ngModel)]="interestRate" [thumbLabel]="true" (change)="onUpdateValues()">
+            </mat-slider>
+            <div class="row">
+              <mat-label class="min-label-interest head-lable-text"> {{minInterestRate}}</mat-label>
+              <mat-label class="max-label-interest head-lable-text"> {{maxInterestRate}}</mat-label>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="col-md-5">
+        <!-- Chart -->
+        <!-- <div style="display: block">
+          <canvas mdbChart [chartType]="chartType" [datasets]="chartDatasets" [labels]="chartLabels"
+            [colors]="chartColors" [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)">
+          </canvas>
+        </div> -->
+        
+        <highcharts-chart [Highcharts]="highcharts" [options]="chartOptions" class="pie-chart">
+        </highcharts-chart>
+       
+        <mat-card class="loan-detail-card">
+          <mat-card-content>
+            <div class="row">
+              <h5 class="col-md-6 head-sec-text-emi" >Monthly EMI Amount</h5>
+              <h5 class="col-md-6 head-lable-text-emi">{{currencySymbol}} {{emiAmount_ui}}</h5>
+            </div>
+            <div class="row">
+              <h6 class="col-md-6 head-sec-text">Principle Amount</h6>
+              <h6 class="col-md-6 head-lable-text">{{currencySymbol}} {{loanAmount}}</h6>
+            </div>
+            <div class="row">
+              <h6 class="col-md-6 head-sec-text">Total Interest Amount</h6>
+              <h6 class="col-md-6 head-lable-text">{{currencySymbol}} {{totalInterest}}</h6>
+            </div>
+            <div class="row">
+              <h6 class="col-md-6 head-sec-text">Toatl Amount Payable</h6>
+              <h6 class="col-md-6 head-lable-text">{{currencySymbol}} {{totalAmount}}</h6>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div>
+
+      </div>
+      <div class="col-md-10">
+        <div class="row justify-content-md-center">
+          <h5 class="title-gap heading-text"> {{currentLoanType}} Loan Amortization Schedule </h5>
+        </div>
+      </div>
+
+      <!--Table -->
+      <div class="col-md-10">
+        <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+          <!-- months Column -->
+          <ng-container matColumnDef="months">
+            <mat-header-cell class="head-sec-text" *matHeaderCellDef> Months </mat-header-cell>
+            <mat-cell class="head-lable-text" *matCellDef="let element"> {{element.months}} </mat-cell>
+          </ng-container>
+
+          <!-- openingBalance Column -->
+          <ng-container matColumnDef="openingBalance">
+            <mat-header-cell class="head-sec-text" *matHeaderCellDef> Opening Balance </mat-header-cell>
+            <mat-cell class="head-lable-text" *matCellDef="let element"> {{element.openingBalance}} </mat-cell>
+          </ng-container>
+
+          <!-- emi Column -->
+          <ng-container matColumnDef="emi">
+            <mat-header-cell class="head-sec-text" *matHeaderCellDef> EMI </mat-header-cell>
+            <mat-cell class="head-lable-text" *matCellDef="let element"> {{element.emi}} </mat-cell>
+          </ng-container>
+
+          <!-- interestPaid Column -->
+          <ng-container matColumnDef="interestPaid">
+            <mat-header-cell  class="head-sec-text" *matHeaderCellDef> Interest paid </mat-header-cell>
+            <mat-cell class="head-lable-text" class="head-lable-text" *matCellDef="let element"> {{element.interestPaid}} </mat-cell>
+          </ng-container>
+
+          <!-- principalPaid Column -->
+          <ng-container matColumnDef="principalPaid">
+            <mat-header-cell class="head-sec-text" *matHeaderCellDef> Principal paid </mat-header-cell>
+            <mat-cell  class="head-lable-text" *matCellDef="let element"> {{element.principalPaid}} </mat-cell>
+          </ng-container>
+
+          <!-- Symbol closingBalance -->
+          <ng-container matColumnDef="closingBalance">
+            <mat-header-cell  class="head-sec-text" *matHeaderCellDef> Closing Balance </mat-header-cell>
+            <mat-cell  class="head-lable-text" *matCellDef="let element"> {{element.closingBalance}} </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+        <mat-paginator class="head-label-text-pagination" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>
