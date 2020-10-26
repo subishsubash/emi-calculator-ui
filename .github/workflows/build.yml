@@ -32,3 +32,12 @@ jobs:
         run: |
           npm ci
           npm run build:ci
+
+      - name: Build & push Docker image
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: subash12396/emi-calculator
+          tag: emi-calculator-ui
+          registry: docker.io
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
