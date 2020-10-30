@@ -197,7 +197,7 @@ export class AppComponent {
     this.dataSource.paginator = this.paginator;
     this.updateChartOptions();
     // Menu bar API call
-    let obsLoanType = this.http.get("http://localhost:9090/system/loan/ALL")
+    let obsLoanType = this.http.get("http://192.168.99.100:9090/system/loan/ALL")
     obsLoanType.toPromise().then(data => {
       console.log(data);
       let i = 0;
@@ -236,7 +236,7 @@ export class AppComponent {
 
   // Calculator details API Call
   getCalculateDetailAPI(loanType: String) {
-    let url = "http://localhost:9090/reference/calculator/settings/" + loanType;
+    let url = "http://192.168.99.100:9090/reference/calculator/settings/" + loanType;
     let obsCalcDetails = this.http.get(url);
     obsCalcDetails.toPromise().then(data => {
       console.log(data);
