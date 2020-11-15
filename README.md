@@ -46,7 +46,7 @@ docker pull mongo
 docker pull subash12396/emi-calculator:emi-calculator-ui
 docker pull subash12396/emi-calculator:emi-calculator
 docker run --name mongodb -d mongo
-docker run --name emi-calculator-ui-container  -d subash12396/emi-calculator:emi-calculator-ui
+docker run -p 8080:80 --name emi-calculator-ui-container -d subash12396/emi-calculator:emi-calculator-ui
 docker run -p 9090:9090 --link mongodb:mongo --name emi-calculator-container  -d subash12396/emi-calculator:emi-calculator
 ```
 
